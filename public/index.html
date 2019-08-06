@@ -1,138 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Inference Control</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <head>
+    <title>Inference Control</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
-  <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {height: 1500px}
-    
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-    
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-    
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
+    <style>
+      /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+      .row.content {
+        height: 1500px;
+      }
+
+      /* Set gray background color and 100% height */
       .sidenav {
-        height: auto;
+        background-color: #f1f1f1;
+        height: 100%;
+      }
+
+      /* Set black background color, white text and some padding */
+      footer {
+        background-color: #555;
+        color: white;
         padding: 15px;
       }
-      .row.content {height: auto;} 
-    }
-  </style>
-</head>
-<body>
 
-<div class="container-fluid">
-  <div class="row content">
-    <div class="col-sm-3 sidenav">
-      <h3>BBJ Inference Control</h3>
+      /* On small screens, set height to 'auto' for sidenav and grid */
+      @media screen and (max-width: 767px) {
+        .sidenav {
+          height: auto;
+          padding: 15px;
+        }
+        .row.content {
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row content">
+        <div class="col-sm-3 sidenav">
+          <h3>BBJ Inference Control</h3>
 
-      <div class = "btn-group">
-          <button type = "button" id="droppy" class = "btn btn-primary dropdown-toggle" data-toggle = "dropdown">
-             Zipper Type
-             <span class = "caret"></span>
-          </button>
-          
-          <ul class = "dropdown-menu" role = "menu">
-             <li><a href = "#" id="speed45max">SPEED 45 or MAX</a></li>
-             <li><a href = "#" id="speed42">SPEED 42</a></li>
-          </ul>
-          
-       </div><br>
+          <div class="btn-group">
+            <button
+              type="button"
+              id="droppy"
+              class="btn btn-primary dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              Zipper Type
+              <span class="caret"></span>
+            </button>
 
-       <button class="btn-success" id="main_button"> START </button>
-    </div>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#" id="speed45max">SPEED 45 or MAX</a></li>
+              <li><a href="#" id="speed42">SPEED 42</a></li>
+            </ul>
+          </div>
+          <br />
 
-    <div class="col-sm-9">
-      <h4><small>RECENT POSTS</small></h4>
-      <hr>
-
-      <div class="row">
-        <div class="col-sm-3">
-          <h2>Top Photo</h2>
-          <hr>
-          <img src="" id="image_top">
+          <button class="btn-success" id="main_button">START</button>
         </div>
-        <div class="col-sm-6">
-          <h2>Head Photo</h2>
-          <hr>
-          <img src="" id="image_head">
+
+        <div class="col-sm-9">
+          <h4><small>RECENT POSTS</small></h4>
+          <hr />
+
+          <div class="row">
+            <div class="col-sm-3">
+              <h2>Top Photo</h2>
+              <hr />
+              <img src="" id="image_top" />
+            </div>
+            <div class="col-sm-6">
+              <h2>Head Photo</h2>
+              <hr />
+              <img src="" id="image_head" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<footer class="container-fluid">
-  <p>Footer Text</p>
-</footer>
+    <footer class="container-fluid">
+      <p>Footer Text</p>
+    </footer>
 
-<script>
-let current_type = null;
-let running = false;
+    <script>
+      let current_type = null;
+      let running = false;
 
-$('#speed45max').click(() => {
-  current_type = 45;
-  $('#droppy').text("speed45max");
-});
-$('#speed42').click(() => {
-  current_type = 42;
-  $('#droppy').text("speed42");
-});
+      $("#speed45max").click(() => {
+        current_type = "speed45max";
+        $("#droppy").text("speed45max");
+      });
+      $("#speed42").click(() => {
+        current_type = "speed42";
+        $("#droppy").text("speed42");
+      });
 
+      $("#main_button").click(() => {
+        if (current_type == null) {
+          alert("Porfavor elija la clase de cierre antes de comenzar!");
+          return;
+        }
 
+        if (running == false) {
+          running = true;
+          $.get("http://localhost:3030/start/" + current_type, function(data) {
+            $("#main_button").attr("class", "btn-danger");
+            $("#main_button").text("STOP");
+          });
+        } else {
+          running = false;
+          current_type = null;
+          $("#droppy").text("Zipper Type");
+          $.get("http://localhost:3030/stop", function(data) {
+            $("#main_button").attr("class", "btn-success");
+            $("#main_button").text("START");
+          });
+        }
+      });
 
-
-$('#main_button').click(() => {
-  if (current_type == null) {
-    alert('Porfavor elija la clase de cierre antes de comenzar!');
-    return;
-  }
-
-  if (running == false){
-    running = true;
-    $.get( "http://localhost:3030/start/" + current_type.toString(), function( data ) {
-      $('#main_button').attr('class', 'btn-danger');
-      $('#main_button').text('STOP');
-    });
-    
-  } else {
-    running = false;
-    current_type = null;
-    $('#droppy').text("Zipper Type");
-    $.get( "http://localhost:3030/stop", function( data ) {
-      $('#main_button').attr('class', 'btn-success');
-      $('#main_button').text('START');
-    });
-  }
-});
-
-
-  var socket = io.connect('http://localhost:3030');
-  socket.on('images', function (data) {
-    $("#image_top").attr('src', data.image_top);
-    $("#image_head").attr('src', data.image_head);
-  });
-
-
-</script>
-
-</body>
+      var socket = io.connect("http://localhost:3030");
+      socket.on("images", function(data) {
+        $("#image_top").attr("src", data.image_top);
+        $("#image_head").attr("src", data.image_head);
+      });
+      socket.on("err", function(data) {
+        alert("ERROR: \n" + data.error);
+        running = false;
+        current_type = null;
+        $("#droppy").text("Zipper Type");
+        $.get("http://localhost:3030/stop", function(data) {
+          $("#main_button").attr("class", "btn-success");
+          $("#main_button").text("START");
+        });
+      });
+    </script>
+  </body>
 </html>
